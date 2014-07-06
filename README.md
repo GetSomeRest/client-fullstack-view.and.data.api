@@ -7,6 +7,7 @@ This has a simple htm file, which host the viewer. The htm file has text fields 
 The token and file urn can ViewerHelperApp - .NET form based App which can create token, upload files and translate files. This sample give back the urn.
 
 This sample shows the use of below API’s
+
 1.Creation of “GuiViewer3D” class.
 2.Disabling the property grid in viewer (viewer3D.propertygrid.openOnSelect = false;)
 3.Adding camera event callback (viewer3D.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, cameraChangedEventCB);)
