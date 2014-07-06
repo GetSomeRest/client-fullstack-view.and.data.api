@@ -29,10 +29,15 @@ This sample shows the use of below API’s
 10.Hide the geometry using its node (viewer3D.hide(currNode);)
 
 11.Getting geometry properties using dbid (viewer3D.getProperties(selectedObjectdbId, getPropertiesCB);) 
+
 12.Controlling the visibility ghost objects (viewer3D.setGhosting()) 
+
 13.Exploding the geometry between 0 to 1(viewer3D.explode(newVal);)
+
 14.Searching the view for a given text (viewer3D.search(Search, onSearchResultsReturned);)
+
 15.Rotating and zooming of the model (viewer3D.impl.controls.autoMove(automoveType, true);)
+
 16.Event handling of selection, escape, hiding, isolation, camera position changing etc. 
 
 Note: You need to host this htm page in a server. Example: in an ASP.net project or you can use technologies like mongoose etc. 
