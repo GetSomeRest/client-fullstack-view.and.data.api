@@ -1,10 +1,14 @@
-viewer.client-view.and.data.api-Fullstack
-=========================================
+#viewer.client-view.and.data.api-Fullstack 
+
+
+##Description
+
+*This sample is part of the [Developer-Autodesk/Autodesk-View-and-Data-API-Samples](https://github.com/Developer-Autodesk/autodesk-view-and-data-api-samples) repository.*
 
 A fullstack viewer client sample demonstrating the usage of search, zoom, rotate, model tree, isolate, select, hide API, and etc.
 
 This has a simple htm file, which host the viewer. The htm file has text fields where you need to provide the token and the file urn. 
-The token and file urn can ViewerHelperApp - .NET form based App which can create token, upload files and translate files. This sample give back the urn.
+
 
 This sample shows the use of below API’s
 
@@ -42,4 +46,19 @@ This sample shows the use of below API’s
 
 Note: You need to host this htm page in a server. Example: in an ASP.net project or you can use technologies like mongoose etc. 
 
+##Dependencies
+
+The token and file urn can ViewerHelperApp - .NET form based App which can create token, upload files and translate files. This sample give back the urn.
+
+##Setup/Usage Instructions
+
+* Get your consumer key and secret key from http://developer.autodesk.com
+
 You can also watch ViewerDeveloperSample_working.mp4. This shows basic working of the sample.
+
+
+##Written by 
+
+Virupaksha Aithal
+
+
