@@ -52,7 +52,7 @@ The token and file urn can ViewerHelperApp - .NET form based App which can creat
 
 ##Setup/Usage Instructions
 
-You can also watch [ViewerDeveloperSample_working.mp4](https://github.com/Developer-Autodesk/workflow-dotnet-winform-view.and.data.api/blob/master/ViewerDeveloperSample_working.mp4). This shows basic working of the sample.
+You can watch [ViewerDeveloperSample_working.mp4](https://github.com/Developer-Autodesk/workflow-dotnet-winform-view.and.data.api/blob/master/ViewerDeveloperSample_working.mp4). This shows basic working of the sample.
 
 ## License
 
