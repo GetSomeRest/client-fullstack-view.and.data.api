@@ -52,13 +52,11 @@ The token and file urn can ViewerHelperApp - .NET form based App which can creat
 
 ##Setup/Usage Instructions
 
-* Get your consumer key and secret key from http://developer.autodesk.com
-
-You can also watch ViewerDeveloperSample_working.mp4. This shows basic working of the sample.
+You can also watch [ViewerDeveloperSample_working.mp4](https://github.com/Developer-Autodesk/workflow-dotnet-winform-view.and.data.api/blob/master/ViewerDeveloperSample_working.mp4). This shows basic working of the sample.
 
 ## License
 
-workflow-curl-view.and.data.api is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). Please see the [LICENSE](LICENSE) file for full details.
+This sample is licensed under the terms of the [MIT License](http://opensource.org/licenses/MIT). Please see the [LICENSE](LICENSE) file for full details.
 
 ##Written by 
 
