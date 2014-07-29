@@ -75,7 +75,7 @@
 </head>
 
 <body id="ResetView" onload="OnInitialize();" bgcolor="#d9e1e0">
-    <p>
+    <p style="color: #0000FF"><a href="help.html" target="_blank">Look at here first to run this sample.</a></p>
         <input id="title" align="middle" readonly="readonly" 
             style="border-style: hidden; position: fixed; font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: bold; color: #FF0000; left: 671px; top: 33px; width: 539px; background-color: #d9e1e0;" 
             type="text" value="Autodesk View &amp; Data API sample" 
@@ -108,14 +108,14 @@
                     &nbsp;</td>
             </tr>
         </table>
-    </p>
+        
 
         <div style="border-style: solid; position: fixed; top: 169px; left: 443px; height: 547px; width: 777px; border-radius: 15px; background-color: #C0C0C0;"  
             id="3dViewDiv">
         </div>
-        <input id="TokenText" 
+        <input id="TokenText" placeholder=" access token here..." 
             style="font-family: Arial, Helvetica, sans-serif; border-radius: 15px; font-size: medium; font-weight: bold; border-style: solid; position: fixed; top: 113px; left: 119px; width: 298px; height: 38px; right: 1115px;" 
-            type="text" /><input id="DocIdTB" type="text" 
+            type="text" /><input id="DocIdTB" type="text"  placeholder=" translated document Id here..." 
         style="border-style: solid; position: fixed; font-family: Arial, Helvetica, sans-serif; 
             font-size: medium; font-weight: bold; left: 438px; top: 113px; width: 924px; height: 38px; border-radius: 15px;" 
         value="" /><input id="LoadDocBtn" type="button" value="Load" 
