@@ -63,7 +63,7 @@ function OnInitialize()
     htmlDoc = document;
 	
     //this function is called only once
-	bFirst = true;
+	//bFirst = true;
 
 }
 
@@ -86,66 +86,40 @@ function OnInitializeViwer()
 	
    var options = {};
    options.env = "AutodeskProduction";
-    options.accessToken = token;
+   options.accessToken = token;
 
-    //initialize environment variable
-    initializeEnvironmentVariable(options);
+   geometryItems = null;
+   geometryItems_children = null;
 
-    //initialize end points
-    initializeServiceEndPoints();
+   currNodes = [];
+   currNode = null;
+   level = 0;
 
-    auth = initializeAuth(null, options);
+   // For navigation between nodes
+   selectedModelListIndex = -1;
 
-    //for the first tinme create new instance
-    if (bFirst == true) {
-        var viewerContainer = htmlDoc.getElementById('3dViewDiv');
-        viewer3D = new Autodesk.Viewing.Private.GuiViewer3D(viewerContainer, {});
-        //viewer3D.initialize();
-        bFirst = false;
+   Autodesk.Viewing.Initializer(options, function () {
 
+       //if (bFirst == true) {
+           var viewerContainer = htmlDoc.getElementById('3dViewDiv');
+           viewer3D = new Autodesk.Viewing.Private.GuiViewer3D(viewerContainer, {});
 
-        //Do not show property grid
-       // viewer3D.propertygrid.openOnSelect = false;
+           viewer3D.initialize();
 
-        //set the ghosting status right.
-        //var cb = document.getElementById("Checkbox_Ghost");
-        //viewer3D.setGhosting(cb.checked);
+           //load the document
+           Autodesk.Viewing.Document.load(documentId, onSuccessDocumentLoadCB, onErrorDocumentLoadCB);
 
-        // Get the htmlDoc Id to load
-        //documentId = document.getElementById("DocIdTB").value;
-        documentId = document.getElementById("DocIdTB").value;
-        if (documentId.substring(0, 3) == "urn")
-            documentId = window.btoa(documentId);
-        documentId = "urn:" + documentId;
+           //viewer3D.propertygrid.openOnSelect = false;
+           viewer3D.setPropertiesOnSelect(false);
 
+           //set the ghosting status right.
+           var cb = document.getElementById("Checkbox_Ghost");
+           viewer3D.setGhosting(cb.checked);
 
-        //camara event
-       // viewer3D.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, cameraChangedEventCB);
+           viewer3D.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, cameraChangedEventCB);
+   });
 
-        // Load the document
-        Autodesk.Viewing.Document.load(documentId, null, onSuccessDocumentLoadCB, onErrorDocumentLoadCB);
-    }
-
-    viewer3D.initialize();
-
-    //Do not show property grid
-    viewer3D.propertygrid.openOnSelect = false;
-
-    //set the ghosting status right.
-    var cb = document.getElementById("Checkbox_Ghost");
-    viewer3D.setGhosting(cb.checked);
-
-    viewer3D.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, cameraChangedEventCB);
-
-    geometryItems = null;
-    geometryItems_children = null;
-
-    currNodes = [];
-    currNode = null;
-    level = 0;
-
-    // For navigation between nodes
-    selectedModelListIndex = -1;
+    
 }
 
 //Load the viewer document - called when user click the load button in UI
@@ -162,8 +136,8 @@ function LoadDocumentBtnClicked()
 	    documentId = window.btoa(documentId);
 	documentId = "urn:" + documentId;
 
-    //load the document
-    Autodesk.Viewing.Document.load(documentId, null, onSuccessDocumentLoadCB, onErrorDocumentLoadCB);
+    
+
     //update the command line text.
     UpdateCommandLine("Loading document : " + documentId);
 }
@@ -452,7 +426,8 @@ function Model_selectedItem(modelList)
         var zoomcb = document.getElementById("ZoomCheckbox");
         if (zoomcb.checked == true) {
             // Zoom if needed
-            viewer3D.docstructure.handleAction(["focus"], selectedObjectdbId);
+           // viewer3D.impl.controls.handleAction(["focus"], selectedObjectdbId);
+            viewer3D.fitToView(currNode.dbId);
         }
 
         // Update the properties of the item that was selected.
@@ -526,7 +501,7 @@ function onNavigateBack()
         // Add the 3d geometry items to the list
         $("#ModelList").empty();
 
-		viewer3D.initialize();
+		//viewer3D.initialize();
 		var item3d = currentViewerDoc.getViewablePath(geometryItems[0]);
 
         viewer3D.load(item3d);	
@@ -825,7 +800,7 @@ function onSearchResultsReturned(idArray) {
 
     if (zoomcb.checked == true) {
         // Zoom if needed
-        viewer3D.docstructure.handleAction(["focus"], idArray);
+        viewer3D.impl.controls.handleAction(["focus"], idArray);
     }
 
     //update the commnadline window.
@@ -883,6 +858,9 @@ function Search_onclick() {
  function zoomout_onclick() {
      viewer3D.canvas.focus();
      automoveType = 4;
+
+     viewer3D.navigation.__options.usePivotAlways = true;
+
      viewer3D.impl.controls.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
@@ -891,6 +869,7 @@ function Search_onclick() {
  function zoomin_onclick() {
      viewer3D.canvas.focus();
      automoveType = 5;
+     viewer3D.navigation.__options.usePivotAlways = true;
      viewer3D.impl.controls.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
