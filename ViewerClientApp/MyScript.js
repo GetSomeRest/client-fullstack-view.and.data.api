@@ -109,7 +109,6 @@ function OnInitializeViwer()
            //load the document
            Autodesk.Viewing.Document.load(documentId, onSuccessDocumentLoadCB, onErrorDocumentLoadCB);
 
-           //viewer3D.propertygrid.openOnSelect = false;
            viewer3D.setPropertiesOnSelect(false);
 
            //set the ghosting status right.
@@ -159,14 +158,15 @@ function onSuccessDocumentLoadCB(viewerDocument) {
         var item3d = viewerDocument.getViewablePath(geometryItems[0]);
 
         //load the geometry in the viewer.
+		viewer3D.addEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, geometryLoadedEventCB);
         viewer3D.load(item3d);
-
         level = 0;
 
         // Add the 3d geometry items to the list
         $("#ModelList").empty()
 
         $("#NavigateForwardBtn").prop('disabled', false);
+		$("#NavigateBackBtn").prop('disabled', true);
 
         var itemList = htmlDoc.getElementById('ModelList');
         for (i = 0; i < geometryItems.length; i++) 
@@ -186,16 +186,26 @@ function onErrorDocumentLoadCB(errorMsg, errorCode)
 // Get the object tree and load the select elements for navigation
 function getObjectTreeCB(result) 
 {
-    $("#ModelList").empty()
-    geometryItems_children = result.children;
 
-    var itemList = htmlDoc.getElementById('ModelList');
-    for (i = 0; i < geometryItems_children.length; i++) 
-    {
-        itemList.add(new Option(geometryItems_children[i].name, geometryItems_children[i]));
+	  if(level == 0)
+	   {
+	     geometryItems_children = result.children;
+	   }
+	   else
+	   {
+			$("#ModelList").empty()
+			geometryItems_children = result.children;
 
-        currNodes.push(geometryItems_children[i]);
-    }
+			var itemList = htmlDoc.getElementById('ModelList');
+			for (i = 0; i < geometryItems_children.length; i++) 
+			{
+				itemList.add(new Option(geometryItems_children[i].name, geometryItems_children[i]));
+
+				currNodes.push(geometryItems_children[i]);
+			}
+	   }
+	   
+    
 }
 
 // Selection changed event Callback in the 3D viewer
@@ -333,18 +343,6 @@ function UpdateCommandLine(text)
 
 function Model_selectedItem(modelList) 
 {
-    if (selectedModelListIndex == modelList.selectedIndex) {
-       //
-	   if(level == 0)
-	   {
-	   }
-	   else
-	   {
-		currNode = currNodes[selectedModelListIndex];
-	   }
-       return; // Do not reload repeatedly
-    }
-
     selectedModelListIndex = modelList.selectedIndex;
 
     if (level == 0) {
@@ -354,7 +352,6 @@ function Model_selectedItem(modelList)
 
         var item3d = currentViewerDoc.getViewablePath(geometryItems[selectedModelListIndex]);
 
-        viewer3D.load(item3d);
 
         // Clear the properties table
         var table = htmlDoc.getElementById('PropertiesTable')
@@ -362,6 +359,12 @@ function Model_selectedItem(modelList)
         {
             table.removeChild(table.firstChild);
         }
+		
+		if (geometryItems_children.length > 0)
+		{
+			$("#NavigateForwardBtn").prop('disabled', false);
+		}		
+		
 
         // Disable the Back button since this is the first level
         $("#NavigateBackBtn").prop('disabled', true);
@@ -387,8 +390,6 @@ function Model_selectedItem(modelList)
             $("#NavigateForwardBtn").prop('disabled', false);
         }
 
-
-        
 
         // Isolate, Select the node item
         var e = document.getElementById("OperationSelectionBox");
@@ -471,10 +472,16 @@ function getPropertiesCB(result)
 
 //go to chidren of the selected item
 function onNavigateForward() {
-    if (level == 0) {
-        var item3d = currentViewerDoc.getViewablePath(geometryItems[selectedModelListIndex]);
-        viewer3D.addEventListener(Autodesk.Viewing.GEOMETRY_LOADED_EVENT, geometryLoadedEventCB);
-        viewer3D.load(item3d);
+    if (level == 0) {		
+			$("#ModelList").empty();
+
+			var itemList = htmlDoc.getElementById('ModelList');
+			for (i = 0; i < geometryItems_children.length; i++) 
+			{
+				itemList.add(new Option(geometryItems_children[i].name, geometryItems_children[i]));
+
+				currNodes.push(geometryItems_children[i]);
+			}
 		
     }
     else {
@@ -491,6 +498,9 @@ function onNavigateForward() {
 
     level = level + 1;
 	selectedModelListIndex = -1;
+	
+	$("#NavigateForwardBtn").prop('disabled', true);
+	$("#NavigateBackBtn").prop('disabled', true);
 }
 
 //go to parent of the selected item
@@ -501,21 +511,14 @@ function onNavigateBack()
         // Add the 3d geometry items to the list
         $("#ModelList").empty();
 
-		//viewer3D.initialize();
-		var item3d = currentViewerDoc.getViewablePath(geometryItems[0]);
-
-        viewer3D.load(item3d);	
-		viewer3D.propertygrid.openOnSelect = false;
+		viewer3D.clearSelection();
+		viewer3D.showAll();
 		
         var itemList = htmlDoc.getElementById('ModelList');
         for (i = 0; i < geometryItems.length; i++) 
         {
             itemList.add(new Option(geometryItems[i].name, geometryItems[i].dbId));
         }
-
-
-        $("#NavigateBackBtn").prop('disabled', true);
-        $("#NavigateForwardBtn").prop('disabled', false);
     }
     else 
     {
@@ -532,6 +535,9 @@ function onNavigateBack()
 
     level = level - 1;
 	selectedModelListIndex = -1;
+	
+	$("#NavigateForwardBtn").prop('disabled', true);
+	$("#NavigateBackBtn").prop('disabled', true);
 }
 
 
@@ -769,7 +775,7 @@ function OnChangeGhostCheckbox() {
 function show_onclick() {
     viewer3D.clearSelection();
     viewer3D.showAll();
-    viewer3D.impl.controls.fitToView();
+    viewer3D.fitToView();
 }
 
 //explode
@@ -800,7 +806,8 @@ function onSearchResultsReturned(idArray) {
 
     if (zoomcb.checked == true) {
         // Zoom if needed
-        viewer3D.impl.controls.handleAction(["focus"], idArray);
+       // viewer3D.impl.controls.handleAction(["focus"], idArray);
+	   viewer3D.fitToView();
     }
 
     //update the commnadline window.
@@ -834,7 +841,10 @@ function Search_onclick() {
 
  //timer end function. used in 
  function continueExecution() {
-     viewer3D.impl.controls.autoMove(automoveType, false);
+     //viewer3D.impl.controls.autoMove(automoveType, false);
+	var orbit = viewer3D.toolController.getTool("orbit");
+	orbit.autoMove(automoveType, false);
+	
  }
 
  //rotate clockwise for 250 mili seconds
@@ -842,7 +852,9 @@ function Search_onclick() {
 
      viewer3D.canvas.focus();
      automoveType = 1;
-     viewer3D.impl.controls.autoMove(automoveType, true);
+
+	var orbit = viewer3D.toolController.getTool("orbit");
+	orbit.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
 
@@ -850,7 +862,8 @@ function Search_onclick() {
  function leftturn_onclick() {
      viewer3D.canvas.focus();
      automoveType = 0;
-     viewer3D.impl.controls.autoMove(automoveType, true);
+	 var orbit = viewer3D.toolController.getTool("orbit");
+	orbit.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
 
@@ -859,9 +872,10 @@ function Search_onclick() {
      viewer3D.canvas.focus();
      automoveType = 4;
 
-     viewer3D.navigation.__options.usePivotAlways = true;
 
-     viewer3D.impl.controls.autoMove(automoveType, true);
+	viewer3D.setZoomTowardsPivot(true);
+	var orbit = viewer3D.toolController.getTool("orbit");
+	orbit.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
 
@@ -869,7 +883,9 @@ function Search_onclick() {
  function zoomin_onclick() {
      viewer3D.canvas.focus();
      automoveType = 5;
-     viewer3D.navigation.__options.usePivotAlways = true;
-     viewer3D.impl.controls.autoMove(automoveType, true);
+	 viewer3D.setZoomTowardsPivot(true);
+
+	var orbit = viewer3D.toolController.getTool("orbit");
+	orbit.autoMove(automoveType, true);
      setTimeout(continueExecution, 250);
  }
