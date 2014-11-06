@@ -81,7 +81,7 @@ function OnInitializeViwer()
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xmlhttp.onreadystatechange = xmlHttpRequestHandler;
     xmlhttp.onerror = xmlHttpRequestErrorHandler;
-    xmlhttp.withCredentials = true;
+    // xmlhttp.withCredentials = true; // this line of code will not work with Firefox 33.02
     xmlhttp.send("access-token=" + token);
 	
    var options = {};
