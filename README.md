@@ -1,5 +1,8 @@
 #viewer.client-view.and.data.api-Fullstack 
 
+##Update
+
+This sample is retired, it is not maintained any more. Please refer to the [extension samples](https://github.com/Developer-Autodesk/library-javascript-viewer-extensions) and the [LmvDbg sample](https://github.com/Developer-Autodesk/LmvDbg) 
 
 ##Description
 
