@@ -1,3 +1,5 @@
+# Deprecated sample - not maintained anymore (Summer 2016)
+
 #viewer.client-view.and.data.api-Fullstack 
 
 ##Update
